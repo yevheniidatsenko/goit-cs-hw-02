@@ -1,19 +1,28 @@
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Виправлений URL з драйвером psycopg2, правильним хостом та паролем
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://postgres:567234@postgres:5432/rest_app")
+# Отримання URL бази даних з змінної середовища, або використання дефолтного значення
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://zhenyadatsenko:124455@postgres:5432/hw_02")
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True, max_overflow=5)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Створення двигуна
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    echo=True,  # Включити логування SQL-запитів (для розробки)
+    max_overflow=5  # Максимальна кількість додаткових з'єднань
+)
 
+# Створення сесійного класу
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
-class Base(DeclarativeBase):
-    pass
+# Базовий клас для моделей
+Base = declarative_base()
 
-
-# Dependency
+# Функція залежності для отримання сесії бази даних
 def get_db():
     db = SessionLocal()
     try:
