@@ -2,7 +2,7 @@ function checkHealth() {
   fetch("/healthchecker")
     .then((response) => {
       if (!response.ok) {
-        // Коли статус відповіді вказує на помилку
+        // If the response status indicates an error
         return response.json().then((errorData) => {
           throw new Error(errorData.detail || "Невідома помилка");
         });
@@ -17,7 +17,7 @@ function checkHealth() {
     })
     .catch((error) => {
       let errorMessage = error.message;
-      // Вилучення тексту після "Error: "
+      // Removal of text after "Error:"
       if (errorMessage.startsWith("Error: ")) {
         errorMessage = errorMessage.substring(7);
       }

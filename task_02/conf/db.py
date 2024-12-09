@@ -1,29 +1,34 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from typing import Generator
+from sqlalchemy.orm import Session
 
-# Отримання URL бази даних з змінної середовища, або використання дефолтного значення
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://zhenyadatsenko:124455@postgres:5432/hw_02")
-
-# Створення двигуна
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    echo=True,  # Включити логування SQL-запитів (для розробки)
-    max_overflow=5  # Максимальна кількість додаткових з'єднань
+# Retrieve the database URL from an environment variable, or use the default value
+SQLALCHEMY_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://zhenyadatsenko:124455@postgres:5432/hw_02"
 )
 
-# Створення сесійного класу
+# Creating the engine
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    echo=True,
+    max_overflow=5
+)
+
+# Creating the session class
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine
 )
 
-# Базовий клас для моделей
+# Base class for models
 Base = declarative_base()
 
-# Функція залежності для отримання сесії бази даних
-def get_db():
+# Dependency function for obtaining the database session
+def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db

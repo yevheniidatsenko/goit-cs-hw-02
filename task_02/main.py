@@ -29,7 +29,7 @@ def index(request: Request):
 @app.get("/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
     try:
-        # Виконання запиту до бази даних
+        # Make request
         result = db.execute(text("SELECT 1"))
         result = result.fetchone()
         if result is None:
